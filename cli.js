@@ -8,37 +8,50 @@ const args = minimist(process.argv.slice(2))
 // const timezone = moment.tz.guest()
 // var moment = require('moment-timezone');
 
+console.log(args)
+
 let help = args.h || "no help"
-let north = args.n
+var  north = args.n
 let south = args.s
 let east = args.e
-let west = args.w
+var  west = args.w
 var tze = args.z || "no tze"
-let day = args.d || 1
+var day = args.d
 let prettyjson = args.j
 
 if (help !== "no help") {
-  console.log(help)
   var help_exit_code = show_help()
   if (help_exit_code != 0) { help_exit_code = 1 }
+  process.exit(help_exit_code)
 }
 
 if (tze === "no tze") { tze = moment.tz.guess(); }
 
+if (prettyjson) {
+  north = 35
+  west = 79
+  day = 1
+}
+
 const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=' + north + '&longitude=-' + west + '&hourly=temperature_2m&daily=weathercode&current_weather=true&temperature_unit=fahrenheit&windspeed_unit=mph&timezone=America%2FNew_York&past_days=' + day);
 
 const data = await response.json();
+
+if (prettyjson) {
+  console.log(data)
+  process.exit(0)
+}
 
 if (day == 0) {
   console.log("It is " + data.current_weather.temperature + " today.")
 } else if (day > 1) {
   console.log("It will be " + data.current_weather.temperature + " degrees in " + day + " days.")
 } else {
-  console.log("It is " + data.current_weather + " degrees tomorrow.");
+  console.log("It is " + data.current_weather.temperature + " degrees tomorrow.");
 }
 
 function show_help() {
-  console.log("Usage: $0 [options] -[n|s] LATITUDE -[e|w] LONGITUDE -z TIME_ZONE\n")
+  console.log("Usage: galosh.js [options] -[n|s] LATITUDE -[e|w] LONGITUDE -z TIME_ZONE\n")
   console.log("\n")
   console.log("  -h\t\tShow this help message and exit.\n")
   console.log("  -n, -s\tLatitude: N positive; S negative.\n")
