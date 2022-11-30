@@ -8,7 +8,7 @@ const args = minimist(process.argv.slice(2))
 // const timezone = moment.tz.guest()
 // var moment = require('moment-timezone');
 
-console.log(args)
+//console.log(args)
 
 let help = args.h || "no help"
 var  north = args.n
