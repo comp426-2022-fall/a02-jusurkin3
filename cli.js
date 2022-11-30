@@ -15,7 +15,7 @@ var  north = args.n
 let south = args.s
 let east = args.e
 var  west = args.w
-var tze = args.z || "no tze"
+var tze = args.t
 var day = args.d
 let prettyjson = args.j
 
@@ -25,7 +25,7 @@ if (help !== "no help") {
   process.exit(help_exit_code)
 }
 
-if (tze === "no tze") { tze = moment.tz.guess(); }
+if (typeof tze == 'undefined') { tze = moment.tz.guess(); }
 
 if (prettyjson) {
   north = 35
@@ -33,7 +33,11 @@ if (prettyjson) {
   day = 1
 }
 
-const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=' + north + '&longitude=-' + west + '&hourly=temperature_2m&daily=weathercode&current_weather=true&temperature_unit=fahrenheit&windspeed_unit=mph&timezone=America%2FNew_York&past_days=' + day);
+if (typeof day == 'undefined') {
+  day = 1
+}
+
+const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=' + north + '&longitude=-' + west + '&daily=weathercode&current_weather=true&temperature_unit=fahrenheit&windspeed_unit=mph&timezone=' + tze + '&past_days=' + day);
 
 const data = await response.json();
 
@@ -41,6 +45,8 @@ if (prettyjson) {
   console.log(data)
   process.exit(0)
 }
+
+//console.log(data)
 
 if (day == 0) {
   console.log("It is " + data.current_weather.temperature + " today.")
