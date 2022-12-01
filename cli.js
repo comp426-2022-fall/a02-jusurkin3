@@ -7,7 +7,7 @@ import fetch from 'node-fetch'
 const args = minimist(process.argv.slice(2))
 
 let help = args.h || "no help"
-var  north = parseFloat(args.n.toFixed(3))
+var  north = args.n
 let south = args.s
 let east = args.e
 var  west = args.w
@@ -26,9 +26,14 @@ if (help !== "no help") {
 if (typeof tze == 'undefined') { tze = moment.tz.guess(); }
 
 if (prettyjson) {
-  north = 35
-  west = 79
-  day = 1
+  const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=35.000&longitude=-79.00&daily=weathercode&current_weather=true&temperature_unit=fahrenheit&windspeed_unit=mph&timezone=' + tze + '&past_days=1');
+  var jdata = await response.json();
+  
+  jdata.latitude = parseFloat((jdata.latitude).toFixed(3));
+  jdata.longitude = parseFloat((jdata.longitude).toFixed(3));
+
+  console.log(jdata);
+  process.exit(0);
 }
 
 if (typeof day == 'undefined') {
@@ -39,10 +44,10 @@ const response = await fetch('https://api.open-meteo.com/v1/forecast?latitude=' 
 
 const data = await response.json();
 
-if (prettyjson) {
+/*if (prettyjson) {
   console.log(data)
   process.exit(0)
-}
+}*/
 
 if (day == 0) {
   console.log("It is " + data.current_weather.temperature + " today.")
