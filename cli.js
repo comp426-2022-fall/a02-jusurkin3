@@ -5,10 +5,6 @@ import moment from 'moment-timezone'
 import fetch from 'node-fetch'
 
 const args = minimist(process.argv.slice(2))
-// const timezone = moment.tz.guest()
-// var moment = require('moment-timezone');
-
-//console.log(args)
 
 let help = args.h || "no help"
 var  north = args.n
@@ -18,6 +14,8 @@ var  west = args.w
 var tze = args.t
 var day = args.d
 let prettyjson = args.j
+
+if (typeof north !== 'undefined') { north = ((north * 1000) / 1000) }
 
 if (help !== "no help") {
   var help_exit_code = show_help()
@@ -45,8 +43,6 @@ if (prettyjson) {
   console.log(data)
   process.exit(0)
 }
-
-//console.log(data)
 
 if (day == 0) {
   console.log("It is " + data.current_weather.temperature + " today.")
