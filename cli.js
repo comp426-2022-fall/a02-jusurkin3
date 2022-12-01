@@ -15,7 +15,7 @@ var tze = args.t
 var day = args.d
 let prettyjson = args.j
 
-if (typeof north !== 'undefined') { north = ((north * 1000) / 1000) }
+if (typeof north !== 'undefined') { north = parseFloat(north.toFixed(3))  }
 
 if (help !== "no help") {
   var help_exit_code = show_help()
