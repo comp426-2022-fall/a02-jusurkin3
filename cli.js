@@ -7,7 +7,7 @@ import fetch from 'node-fetch'
 const args = minimist(process.argv.slice(2))
 
 let help = args.h || "no help"
-var  north = args.n
+var  north = parseFloat(args.n.toFixed(3))
 let south = args.s
 let east = args.e
 var  west = args.w
@@ -15,7 +15,7 @@ var tze = args.t
 var day = args.d
 let prettyjson = args.j
 
-if (typeof north !== 'undefined') { north = parseFloat(north.toFixed(3))  }
+//if (typeof north !== 'undefined') { north = parseFloat(north.toFixed(3))  }
 
 if (help !== "no help") {
   var help_exit_code = show_help()
